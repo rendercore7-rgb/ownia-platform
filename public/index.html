@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OWNIA — Own Your Life, AI Rules Your Wealth</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen" class="overlay-screen">
+  <div class="auth-container">
+    <!-- Login -->
+    <div id="loginForm">
+      <div class="compass-emblem"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(201,168,76,.3)" stroke-width="1"/><polygon points="50,8 46,25 54,25" fill="#C9A84C"/><circle cx="50" cy="50" r="4" fill="#C9A84C"/><text x="50" y="4" text-anchor="middle" fill="#C9A84C" font-size="7" font-family="Cinzel">N</text></svg></div>
+      <div class="auth-logo">OWNIA</div>
+      <div class="auth-sub">Navigate Your Digital Sovereignty</div>
+      <div class="auth-form">
+        <div class="form-group"><label>이메일</label><input type="email" id="loginEmail" placeholder="name@example.com"></div>
+        <div class="form-group"><label>비밀번호</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <div id="loginError" class="auth-error"></div>
+        <button class="btn-gold" id="loginBtn" onclick="handleLogin()">항해 시작</button>
+      </div>
+      <div class="auth-toggle">계정이 없으신가요? <a onclick="showSignup()">회원가입</a></div>
+    </div>
+
+    <!-- Signup -->
+    <div id="signupForm" style="display:none">
+      <div class="compass-emblem"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(201,168,76,.3)" stroke-width="1"/><polygon points="50,8 46,25 54,25" fill="#C9A84C"/><circle cx="50" cy="50" r="4" fill="#C9A84C"/></svg></div>
+      <div class="auth-logo">OWNIA</div>
+      <div class="auth-sub">새로운 항해자 등록</div>
+      <div class="auth-form">
+        <div class="form-group"><label>이름</label><input type="text" id="signupName" placeholder="홍길동"></div>
+        <div class="form-group"><label>이메일</label><input type="email" id="signupEmail" placeholder="name@example.com"></div>
+        <div class="form-group"><label>비밀번호</label><input type="password" id="signupPassword" placeholder="8자 이상"></div>
+        <div id="signupError" class="auth-error"></div>
+        <button class="btn-gold" id="signupBtn" onclick="handleSignup()">인증 코드 발송</button>
+      </div>
+      <div class="auth-toggle">이미 계정이 있으신가요? <a onclick="showLogin()">로그인</a></div>
+    </div>
+
+    <!-- Verify -->
+    <div id="verifyForm" style="display:none">
+      <div class="compass-emblem"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0,229,255,.3)" stroke-width="1" stroke-dasharray="5,5"/><polygon points="50,8 46,25 54,25" fill="#00E5FF"/><circle cx="50" cy="50" r="4" fill="#00E5FF"/></svg></div>
+      <div class="auth-logo" style="color:var(--cyan)">이메일 인증</div>
+      <div class="auth-sub"><span id="verifyEmailShow"></span>으로 인증 코드를 발송했습니다</div>
+      <div class="verification-code" id="codeInputs">
+        <input type="text" maxlength="1" oninput="codeInput(this,0)" onkeydown="codeKeydown(event,0)">
+        <input type="text" maxlength="1" oninput="codeInput(this,1)" onkeydown="codeKeydown(event,1)">
+        <input type="text" maxlength="1" oninput="codeInput(this,2)" onkeydown="codeKeydown(event,2)">
+        <input type="text" maxlength="1" oninput="codeInput(this,3)" onkeydown="codeKeydown(event,3)">
+        <input type="text" maxlength="1" oninput="codeInput(this,4)" onkeydown="codeKeydown(event,4)">
+        <input type="text" maxlength="1" oninput="codeInput(this,5)" onkeydown="codeKeydown(event,5)">
+      </div>
+      <div id="verifyError" class="auth-error"></div>
+      <button class="btn-gold" id="verifyBtn" onclick="handleVerify()">인증 확인</button>
+      <div class="resend-timer" id="resendArea">
+        <span id="resendTimer">60초 후 재발송 가능</span>
+        <a id="resendBtn" style="display:none" onclick="handleResend()">인증 코드 재발송</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN SITE -->
+<div id="mainSite" class="main-site">
+  <nav id="mainNav">
+    <div class="nav-logo">OWNIA</div>
+    <div class="nav-links">
+      <a onclick="scrollToEl('hero')">HOME</a>
+      <a onclick="scrollToEl('architecture')">ARCHITECTURE</a>
+      <a onclick="scrollToEl('economy')">ECONOMY</a>
+      <a onclick="scrollToEl('ia-system')">IA SYSTEM</a>
+      <a onclick="scrollToEl('roadmap')">ROADMAP</a>
+      <a onclick="scrollToEl('dashboard-area')">DASHBOARD</a>
+    </div>
+    <div class="nav-user">
+      <span class="nav-user-name" id="navUserName"></span>
+      <button class="btn-nav" onclick="logout()">LOGOUT</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg">
+      <div class="compass-large"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="none" stroke="rgba(201,168,76,.15)" stroke-width=".3"/><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(201,168,76,.1)" stroke-width=".3"/><line x1="50" y1="2" x2="50" y2="98" stroke="rgba(201,168,76,.08)" stroke-width=".3"/><line x1="2" y1="50" x2="98" y2="50" stroke="rgba(201,168,76,.08)" stroke-width=".3"/><polygon points="50,5 47,20 53,20" fill="rgba(201,168,76,.2)"/><circle cx="50" cy="50" r="3" fill="rgba(201,168,76,.15)"/></svg></div>
+      <div class="grid-overlay"></div><div class="vignette"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Active Ownership Economy</div>
+      <h1 class="hero-title">Own Your Life,<br><span>AI Rules Your Wealth</span></h1>
+      <p class="hero-title-sub">당신의 소비가 도시의 지분이 되는 곳</p>
+      <p class="hero-desc">데이터 주권 회복의 시작, OWNIA. 사용자가 생태계의 인프라와 데이터를 직접 소유하는 능동적 소유 경제로의 패러다임 전환.</p>
+      <div class="hero-cta">
+        <button class="btn-hero primary" onclick="openCityModal()">도시 참여</button>
+        <button class="btn-hero secondary" onclick="scrollToEl('architecture')">탐색 시작</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">2,847</div><div class="hero-stat-label">항해자</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">₩12.4B</div><div class="hero-stat-label">총 자산 규모</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">98.7%</div><div class="hero-stat-label">수익 배분율</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture" class="section">
+    <div class="section-header"><div class="section-eyebrow">Infrastructure Assets</div><div class="section-divider"></div><h2 class="section-title">지능형 가상 인프라 <span>Architecture</span></h2><p class="section-desc">도시의 4대 핵심 자산을 탐색하세요.</p></div>
+    <div class="arch-grid">
+      <div class="arch-card"><div class="arch-icon">🚝</div><h3>모노레일</h3><div class="arch-tag">DATA ARTERY · NFT</div><p>데이터 흐름의 동맥. 물류 트래픽 기반의 수익형 NFT로 도시의 핵심 운송 인프라를 소유합니다.</p></div>
+      <div class="arch-card"><div class="arch-icon">🏛</div><h3>랜드마크 타워</h3><div class="arch-tag">ORACLE · GOVERNANCE</div><p>도시의 오라클 & 거버넌스 중심점. AI 실시간 데이터 분석과 DAO 투표의 핵심 거점.</p></div>
+      <div class="arch-card"><div class="arch-icon">🏯</div><h3>한옥 구역</h3><div class="arch-tag">CULTURAL IP · PREMIUM</div><p>희소 가치를 지닌 프리미엄 문화 IP. 한정 수량 전통 문화 자산의 높은 희소성 프리미엄.</p></div>
+      <div class="arch-card"><div class="arch-icon">🌊</div><h3>강변 / 교량</h3><div class="arch-tag">LIQUIDITY · TRAFFIC FEE</div><p>트래픽 수수료 기반의 유동성 자산. 도시 내 모든 이동이 수익으로 전환됩니다.</p></div>
+    </div>
+  </section>
+
+  <!-- ECONOMY -->
+  <section id="economy" class="section">
+    <div class="section-header"><div class="section-eyebrow">Tokenized Consumption</div><div class="section-divider"></div><h2 class="section-title">소비의 자산화 <span>Economy</span></h2><p class="section-desc">당신의 모든 행동이 자산이 됩니다.</p></div>
+    <div class="economy-flow">
+      <div class="flow-step"><div class="flow-step-icon">⚡</div><div class="flow-step-title">행동 발생</div><div class="flow-step-desc">소비·거래·참여</div></div><div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-icon">🧠</div><div class="flow-step-title">AI 분석</div><div class="flow-step-desc">패턴·가치 산정</div></div><div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-icon">📊</div><div class="flow-step-title">지분 획득</div><div class="flow-step-desc">토큰·NFT 발행</div></div><div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-icon">💰</div><div class="flow-step-title">수수료 배분</div><div class="flow-step-desc">자동 수익 분배</div></div>
+    </div>
+    <div class="compare-table"><table><thead><tr><th>구분</th><th>Web 2.0 (추출형)</th><th>OWNIA (순환형)</th></tr></thead><tbody>
+      <tr><td>DATA</td><td>플랫폼이 독점 소유</td><td>사용자가 직접 소유</td></tr>
+      <tr><td>REVENUE</td><td>광고 수익 → 플랫폼</td><td>광고 수익 → 사용자 배분</td></tr>
+      <tr><td>GOVERNANCE</td><td>중앙 집중 의사결정</td><td>DAO 투표 기반 민주적 운영</td></tr>
+      <tr><td>ASSET</td><td>사용 기록 삭제 가능</td><td>블록체인 영구 기록 & 자산화</td></tr>
+      <tr><td>AI</td><td>사용자 행동 추적·조작</td><td>사용자 이익 최적화 비서</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <!-- IA SYSTEM -->
+  <section id="ia-system" class="section">
+    <div class="section-header"><div class="section-eyebrow">Intelligence Architecture</div><div class="section-divider"></div><h2 class="section-title">지능형 아키텍처 <span>IA System</span></h2><p class="section-desc">AI 비서가 실시간으로 포트폴리오를 최적화합니다.</p></div>
+    <div class="ia-grid">
+      <div class="ia-feature"><div class="ia-icon">🤖</div><h4>자율 포트폴리오 관리</h4><p>AI 에이전트가 보유 자산을 실시간 분석, 자동 리밸런싱. 24/7 자산 관리.</p></div>
+      <div class="ia-feature"><div class="ia-icon">📡</div><h4>자율 광고 수익 창출</h4><p>오프라인 상태에서도 AI가 광고 슬롯 관리, 최적 광고주 매칭으로 수익 극대화.</p></div>
+      <div class="ia-feature"><div class="ia-icon">🔮</div><h4>예측 기반 자산 추천</h4><p>ML 기반 트래픽 예측으로 가치 상승 자산을 선제 추천.</p></div>
+      <div class="ia-feature"><div class="ia-icon">🛡</div><h4>AI 중립 조정 시스템</h4><p>거버넌스 분쟁 시 AI가 중립 중재, 데이터 기반 공정 의사결정 지원.</p></div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap" class="section">
+    <div class="section-header"><div class="section-eyebrow">Roadmap & Ecosystem</div><div class="section-divider"></div><h2 class="section-title">확장성 <span>Future</span></h2></div>
+    <div class="roadmap-timeline">
+      <div class="roadmap-item active"><div class="roadmap-phase">Phase 1 — Foundation</div><h4>인프라 구축 & 커뮤니티 형성</h4><p>핵심 도시 인프라 배포, 초기 항해자 유치, 기본 거버넌스 구축.</p></div>
+      <div class="roadmap-item active"><div class="roadmap-phase">Phase 2 — Expansion</div><h4>부동산 토큰화 & 타겟 광고</h4><p>실물 부동산 연계 토큰화, 초정밀 타겟 광고 시스템.</p></div>
+      <div class="roadmap-item"><div class="roadmap-phase">Phase 3 — Convergence</div><h4>가상 이벤트 & 글로벌 확장</h4><p>메타버스 컨벤션 센터, 글로벌 도시 네트워크 연결.</p></div>
+      <div class="roadmap-item"><div class="roadmap-phase">Phase 4 — Sovereignty</div><h4>완전 탈중앙화 DAO</h4><p>DAO 기반 완전 자율 운영, 디지털 시민권 발급.</p></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard-area" class="section" style="background:var(--navy-light)">
+    <div class="dashboard-section">
+      <div class="dash-header"><h2>📊 My Dashboard</h2><button class="btn-nav filled" onclick="openCityModal()">도시 참여</button></div>
+      <div id="depositBanner" style="display:none"></div>
+      <div class="dash-cards">
+        <div class="dash-card"><div class="label">차용 원금</div><div class="value" id="dashPrincipal">₩0</div><div class="sub">총 차용 금액</div></div>
+        <div class="dash-card"><div class="label">일일 지급액</div><div class="value" id="dashDaily">₩0</div><div class="sub">매일 지급되는 금액</div></div>
+        <div class="dash-card"><div class="label">누적 수령액</div><div class="value" id="dashTotal">₩0</div><div class="sub">지급 완료 총액</div></div>
+        <div class="dash-card"><div class="label">지급 시작일</div><div class="value" id="dashStartDate">—</div><div class="sub">차용일 + 7일</div></div>
+      </div>
+      <div id="paymentTableArea" style="display:none">
+        <div class="payment-table-wrap"><table class="payment-table"><thead><tr><th>회차</th><th>지급일</th><th>금액</th><th>상태</th><th>고객 지급요청</th><th>관리자 승인</th></tr></thead><tbody id="paymentBody"></tbody></table></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+      <div id="noLoanMsg" style="text-align:center;padding:60px 20px;color:rgba(240,236,226,.3)">
+        <div style="font-size:3rem;margin-bottom:16px">🧭</div>
+        <p style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:.1em">아직 도시 참여 이력이 없습니다</p>
+        <p style="font-size:.85rem;margin-top:8px">'도시 참여' 버튼을 클릭하세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer><div class="footer-logo">OWNIA</div><p>Own Your Life, AI Rules Your Wealth<br>© 2026 OWNIA. All rights reserved.</p></footer>
+</div>
+
+<!-- CITY PARTICIPATION MODAL -->
+<div id="cityModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeCityModal()">✕</button>
+    <div class="modal-header"><h2>🏙 도시 참여</h2><p>OWNIA 생태계에 합류하여 디지털 자산의 소유자가 되세요.</p></div>
+    <div class="modal-body">
+      <div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div>
+
+      <!-- Step 1: Amount -->
+      <div class="step-panel active" id="step1">
+        <h3 style="font-family:var(--font-display);color:var(--gold);font-size:1.1rem;margin-bottom:20px">참여 금액 선택</h3>
+        <div class="amount-grid">
+          <div class="amount-btn" onclick="selectAmount(this,10000000)">₩1,000만</div>
+          <div class="amount-btn" onclick="selectAmount(this,30000000)">₩3,000만</div>
+          <div class="amount-btn" onclick="selectAmount(this,50000000)">₩5,000만</div>
+          <div class="amount-btn" onclick="selectAmount(this,100000000)">₩1억</div>
+          <div class="amount-btn" onclick="selectAmount(this,300000000)">₩3억</div>
+          <div class="amount-btn" onclick="selectAmount(this,500000000)">₩5억</div>
+        </div>
+        <div class="custom-amount">
+          <label style="font-size:.75rem;color:var(--gold);font-family:var(--font-display);display:block;margin-bottom:6px">직접 입력 (백만원 단위)</label>
+          <input type="number" id="customAmount" placeholder="금액 (원)" min="1000000" max="500000000" step="1000000" oninput="customAmountInput()">
+        </div>
+        <div class="amount-info" id="amountInfo" style="display:none">선택 금액: <strong id="selectedAmountDisplay"></strong><br>일일 지급액: <strong id="dailyPayDisplay"></strong> (7일 후부터 매일)</div>
+        <button class="btn-gold" id="step1Next" disabled onclick="goStep(2)" style="margin-top:20px">다음 단계</button>
+      </div>
+
+      <!-- Step 2: Agreement -->
+      <div class="step-panel" id="step2">
+        <h3 style="font-family:var(--font-display);color:var(--gold);font-size:1.1rem;margin-bottom:20px">차용증 확인</h3>
+        <div class="agreement-doc" id="agreementDoc"></div>
+        <div class="agreement-check"><input type="checkbox" id="agreeCheck" onchange="checkAgreement()"><label for="agreeCheck">상기 차용증의 내용을 확인하였으며, 모든 조건에 동의합니다.</label></div>
+        <div style="display:flex;gap:8px;margin-top:20px"><button class="btn-small" onclick="goStep(1)">이전</button><button class="btn-gold" id="step2Next" disabled onclick="goStep(3)" style="flex:1">전자 서명</button></div>
+      </div>
+
+      <!-- Step 3: Signature -->
+      <div class="step-panel" id="step3">
+        <h3 style="font-family:var(--font-display);color:var(--gold);font-size:1.1rem;margin-bottom:20px">전자 서명</h3>
+        <p style="font-size:.85rem;color:rgba(240,236,226,.5);margin-bottom:16px">아래 영역에 서명해 주세요.</p>
+        <div class="signature-pad" id="signaturePad"><canvas id="sigCanvas"></canvas></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-small" onclick="clearSignature()">지우기</button>
+          <button class="btn-small" onclick="goStep(2)">이전</button>
+          <button class="btn-small confirm" id="submitLoan" disabled onclick="submitLoan()">서명 완료 & 차용 신청</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Deposit Confirmation -->
+      <div class="step-panel" id="step4">
+        <div class="deposit-box">
+          <h3>💳 입금 확인</h3>
+          <div class="deposit-info">
+            차용 금액: <span class="hl" id="depositAmount"></span><br>
+            아래 계좌로 입금 후 확인 버튼을 눌러주세요.<br><br>
+            <strong style="color:var(--gold)">입금 계좌</strong><br>
+            <span class="hl">우리은행 1002-XXX-XXXXXX</span><br>
+            <span style="font-size:.8rem;color:rgba(240,236,226,.4)">예금주: (주)오우니아</span>
+          </div>
+          <div class="deposit-warning">⚠️ 입금 확인 버튼을 누르시면 차용증이 이메일로 자동 발송됩니다. 실제 입금 완료 후 눌러주세요.</div>
+          <div class="deposit-check"><input type="checkbox" id="depositCheck" onchange="checkDeposit()"><label for="depositCheck">위 계좌로 입금을 완료하였습니다.</label></div>
+          <button class="btn-deposit" id="depositBtn" disabled onclick="confirmDeposit()">입금 확인 & 차용증 이메일 발송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
